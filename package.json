@@ -1,0 +1,65 @@
+{
+  "name": "agent-world-kit",
+  "version": "0.1.0",
+  "description": "Model-agnostic toolkit for agents that create, package, and run interactive story worlds.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Chad Etsell and contributors",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chadetsell/agent-world-kit.git"
+  },
+  "homepage": "https://github.com/chadetsell/agent-world-kit#readme",
+  "bugs": {
+    "url": "https://github.com/chadetsell/agent-world-kit/issues"
+  },
+  "keywords": [
+    "agents",
+    "elizaos",
+    "interactive-fiction",
+    "storytelling",
+    "worldbuilding",
+    "storyboard",
+    "creative-tools"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist",
+    "web",
+    "examples",
+    "schemas",
+    "docs",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js"
+    }
+  },
+  "bin": {
+    "worldkit": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx watch src/cli.ts serve",
+    "start": "node dist/cli.js serve",
+    "demo": "tsx src/cli.ts demo",
+    "test": "tsx --test test/*.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "check": "npm run typecheck && npm test && npm run build",
+    "prepack": "npm run check"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

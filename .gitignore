@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.agent-worlds/
+.env
+.env.local
+*.log
+.DS_Store
+coverage/
+integrations/elizaos/node_modules/
+integrations/elizaos/dist/

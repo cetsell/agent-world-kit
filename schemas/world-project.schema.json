@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/chadetsell/agent-world-kit/schemas/world-project.schema.json",
+  "title": "Agent World Kit project",
+  "type": "object",
+  "required": ["schema", "id", "title", "seedBrief", "canon", "artifacts", "assets", "sessions", "audits", "createdAt", "updatedAt"],
+  "properties": {
+    "schema": { "const": "agent-world-kit/world-project@1" },
+    "id": { "type": "string", "pattern": "^world_" },
+    "title": { "type": "string", "minLength": 1 },
+    "seedBrief": { "type": "string", "minLength": 8 },
+    "status": { "enum": ["draft", "ready"] },
+    "canon": {
+      "type": "object",
+      "required": ["title", "logline", "characters", "locations", "story", "continuity"]
+    },
+    "artifacts": { "type": "array", "items": { "$ref": "#/$defs/artifact" } },
+    "assets": { "type": "array" },
+    "sessions": { "type": "array" },
+    "audits": { "type": "array" },
+    "metadata": { "type": "object" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "required": ["schema", "id", "worldId", "type", "title", "content", "blocks", "assetPlan"],
+      "properties": {
+        "schema": { "const": "agent-world-kit/creative-package@1" },
+        "type": { "enum": ["narrative", "game_world", "storyboard", "film_treatment", "photoshoot", "visual_novel"] }
+      }
+    }
+  }
+}

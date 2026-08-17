@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Create, package, and play agent-generated story worlds." />
+    <title>Agent World Kit</title>
+    <link rel="stylesheet" href="/styles.css?v=0.1.0-rc2" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#" aria-label="Agent World Kit home">
+          <span class="brand-mark" aria-hidden="true">◈</span>
+          <span><strong>World Kit</strong><small>Agent studio</small></span>
+        </a>
+        <button class="new-world-button" id="newWorldButton"><span>＋</span> New world</button>
+        <div class="sidebar-label">Your worlds</div>
+        <nav class="world-list" id="worldList" aria-label="Generated worlds"></nav>
+        <div class="sidebar-footer">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="adapterLabel">Connecting…</span>
+          <a href="/api/openapi.json" target="_blank">API</a>
+        </div>
+      </aside>
+
+      <main class="main" id="main">
+        <section class="create-view" id="createView">
+          <div class="create-copy">
+            <span class="glyph">✦</span>
+            <h1>Make a world worth entering.</h1>
+            <p>One creative seed becomes a frozen canon, a playable world, and a complete cross-media production kit.</p>
+          </div>
+          <form class="create-card" id="createForm">
+            <label for="brief">Describe the world, pressure, or possibility</label>
+            <textarea id="brief" name="brief" rows="5" required minlength="8" placeholder="A coastal observatory receives radio messages from tomorrow, but each warning erases one shared memory…"></textarea>
+            <div class="format-heading"><span>Build packages</span><button type="button" class="text-button" id="toggleFormats">Select all</button></div>
+            <div class="format-grid" id="formatGrid">
+              <label><input type="checkbox" value="narrative" checked /><span><b>Narrative</b><small>Story arc & chapters</small></span></label>
+              <label><input type="checkbox" value="game_world" checked /><span><b>Game world</b><small>Loop, zones & quests</small></span></label>
+              <label><input type="checkbox" value="storyboard" checked /><span><b>Storyboard</b><small>Shot-by-shot plan</small></span></label>
+              <label><input type="checkbox" value="film_treatment" checked /><span><b>Film treatment</b><small>Production treatment</small></span></label>
+              <label><input type="checkbox" value="photoshoot" checked /><span><b>Photoshoot</b><small>Consistent campaign</small></span></label>
+              <label><input type="checkbox" value="visual_novel" checked /><span><b>Visual novel</b><small>Choices & endings</small></span></label>
+            </div>
+            <button class="primary-button" type="submit"><span>Generate complete world</span><span aria-hidden="true">→</span></button>
+            <p class="form-note" id="createNote">The demo model is instant and keyless. Configure any OpenAI-compatible model when you want original output.</p>
+          </form>
+        </section>
+
+        <section class="world-view hidden" id="worldView">
+          <header class="world-header">
+            <div>
+              <div class="world-meta" id="worldMeta"></div>
+              <h1 id="worldTitle"></h1>
+              <p id="worldLogline"></p>
+            </div>
+            <div class="header-actions">
+              <button class="secondary-button" id="auditButton">Run continuity audit</button>
+              <a class="secondary-button" id="exportButton" download>Export JSON</a>
+            </div>
+          </header>
+          <nav class="tabs" id="tabs" aria-label="World views">
+            <button class="active" data-tab="overview">Overview</button>
+            <button data-tab="packages">Packages <span id="packageCount"></span></button>
+            <button data-tab="play">Play</button>
+            <button data-tab="assets">Assets <span id="assetCount"></span></button>
+            <button data-tab="canon">Canon</button>
+          </nav>
+          <div class="tab-content" id="tabContent"></div>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast hidden" id="toast" role="status"></div>
+    <div class="modal-backdrop hidden" id="modalBackdrop">
+      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+        <div id="modalContent"></div>
+      </section>
+    </div>
+    <script type="module" src="/app.js?v=0.1.0-rc2"></script>
+  </body>
+</html>

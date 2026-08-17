@@ -1,0 +1,11 @@
+.git
+.github
+.agent-worlds
+node_modules
+dist
+test
+integrations/elizaos/node_modules
+integrations/elizaos/dist
+*.log
+.env*
+.DS_Store
