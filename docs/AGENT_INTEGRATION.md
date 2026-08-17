@@ -15,11 +15,12 @@ the engine normalizes and validates canon, artifacts, and scenes.
 
 ## elizaOS plugin
 
-The included plugin keeps only lightweight active-session ids. elizaOS owns
-conversation memory and model policy; World Kit owns creative projects and
-playthrough state. Set `WORLDKIT_URL` and register the default export. The
-plugin targets the stable `Action`, `Provider`, and `runtime.getSetting`
-contracts in `@elizaos/core` 1.7.x.
+The included plugin stores lightweight active-session ids through the runtime
+cache, keyed by agent and actor. elizaOS owns conversation memory, cache
+persistence, and model policy; World Kit owns creative projects and playthrough
+state. Set `WORLDKIT_URL` and register the default export. The plugin targets
+the stable `Action`, `Provider`, and `runtime.getSetting` contracts in
+`@elizaos/core` 1.7.x.
 
 ## Recommended agent loop
 

@@ -4,6 +4,15 @@
   "description": "elizaOS actions and context provider for Agent World Kit.",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cetsell/agent-world-kit.git",
+    "directory": "integrations/elizaos"
+  },
+  "homepage": "https://github.com/cetsell/agent-world-kit#readme",
+  "bugs": {
+    "url": "https://github.com/cetsell/agent-world-kit/issues"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -20,11 +29,13 @@
   "devDependencies": {
     "@elizaos/core": "1.7.2",
     "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "test": "tsx --test test/*.test.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "prepack": "npm run typecheck && npm run build"
+    "prepack": "npm run typecheck && npm test && npm run build"
   }
 }

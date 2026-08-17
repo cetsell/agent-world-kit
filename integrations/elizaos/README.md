@@ -25,4 +25,7 @@ export const project = {
 The plugin targets `@elizaos/core` 1.7.x and uses the stable action, provider,
 and `runtime.getSetting` contracts. It talks to the model-agnostic World Kit
 HTTP API, so the elizaOS agent's own model provider and the kit's production
-model may be the same or different.
+model may be the same or different. Active world-session mappings are stored
+through the elizaOS runtime cache, keyed by agent and actor, so they survive
+plugin or agent-process restarts when the configured database adapter persists
+cache entries.

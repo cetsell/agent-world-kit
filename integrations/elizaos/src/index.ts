@@ -37,7 +37,12 @@ interface World {
   sessions: Session[];
 }
 
-const activeSessions = new Map<string, { worldId: string; sessionId: string }>();
+interface ActiveSession {
+  worldId: string;
+  sessionId: string;
+}
+
+const SESSION_CACHE_PREFIX = "agent-world-kit:active-session";
 
 function baseUrl(runtime: IAgentRuntime): string {
   const configured = runtime.getSetting("WORLDKIT_URL");
@@ -46,6 +51,34 @@ function baseUrl(runtime: IAgentRuntime): string {
 
 function actorKey(message: Memory): string {
   return String(message.entityId || message.roomId);
+}
+
+function sessionCacheKey(runtime: IAgentRuntime, message: Memory): string {
+  return `${SESSION_CACHE_PREFIX}:${runtime.agentId}:${actorKey(message)}`;
+}
+
+function isActiveSession(value: unknown): value is ActiveSession {
+  return Boolean(
+    value
+      && typeof value === "object"
+      && "worldId" in value
+      && "sessionId" in value
+      && typeof value.worldId === "string"
+      && typeof value.sessionId === "string",
+  );
+}
+
+async function getActiveSession(runtime: IAgentRuntime, message: Memory): Promise<ActiveSession | null> {
+  const value = await runtime.getCache<unknown>(sessionCacheKey(runtime, message));
+  return isActiveSession(value) ? value : null;
+}
+
+async function setActiveSession(runtime: IAgentRuntime, message: Memory, session: ActiveSession): Promise<void> {
+  await runtime.setCache(sessionCacheKey(runtime, message), session);
+}
+
+async function clearActiveSession(runtime: IAgentRuntime, message: Memory): Promise<void> {
+  await runtime.deleteCache(sessionCacheKey(runtime, message));
 }
 
 async function request<T>(runtime: IAgentRuntime, path: string, options: RequestInit = {}): Promise<T> {
@@ -126,7 +159,7 @@ const enterWorld: Action = {
       if (!worldId) return respond(callback, { success: false, text: "There isn't a world to enter yet. Ask me to create one first.", error: "world_missing" });
       const world = await request<World>(runtime, `/api/worlds/${worldId}`);
       const session = await request<Session>(runtime, `/api/worlds/${worldId}/sessions`, { method: "POST", body: "{}" });
-      activeSessions.set(actorKey(message), { worldId, sessionId: session.id });
+      await setActiveSession(runtime, message, { worldId, sessionId: session.id });
       const scene = session.scenes.find((item) => item.id === session.currentSceneId)!;
       return respond(callback, { success: true, text: sceneText(world.title, scene), data: { worldId, sessionId: session.id, scene } });
     } catch (error) {
@@ -140,10 +173,10 @@ const chooseInWorld: Action = {
   similes: ["MAKE_STORY_CHOICE", "CONTINUE_WORLD", "TAKE_ACTION_IN_WORLD"],
   description: "Choose an available action in the current Agent World Kit session and advance the world.",
   examples: [[{ name: "user", content: { text: "Choose Open the lamp." } }]],
-  validate: async (_runtime, message) => activeSessions.has(actorKey(message)),
+  validate: async (runtime, message) => Boolean(await getActiveSession(runtime, message)),
   handler: async (runtime, message, _state, _options, callback) => {
     try {
-      const active = activeSessions.get(actorKey(message));
+      const active = await getActiveSession(runtime, message);
       if (!active) return respond(callback, { success: false, text: "Start or enter a world before making a choice.", error: "session_missing" });
       const world = await request<World>(runtime, `/api/worlds/${active.worldId}`);
       const session = world.sessions.find((item) => item.id === active.sessionId);
@@ -159,7 +192,7 @@ const chooseInWorld: Action = {
       }
       const updated = await request<Session>(runtime, `/api/worlds/${active.worldId}/sessions/${active.sessionId}/choose`, { method: "POST", body: JSON.stringify({ choiceId: choice.id }) });
       const next = updated.scenes.find((item) => item.id === updated.currentSceneId)!;
-      if (updated.status === "completed") activeSessions.delete(actorKey(message));
+      if (updated.status === "completed") await clearActiveSession(runtime, message);
       return respond(callback, { success: true, text: sceneText(world.title, next), data: { worldId: world.id, sessionId: updated.id, scene: next } });
     } catch (error) {
       return respond(callback, { success: false, text: `The world couldn't respond: ${error instanceof Error ? error.message : String(error)}`, error: error as Error });
@@ -174,7 +207,7 @@ const worldKitContext: Provider = {
   get: async (runtime: IAgentRuntime, message: Memory, _state: State) => {
     try {
       const payload = await request<{ worlds: WorldSummary[] }>(runtime, "/api/worlds");
-      const active = activeSessions.get(actorKey(message));
+      const active = await getActiveSession(runtime, message);
       const text = payload.worlds.length
         ? `Agent World Kit has ${payload.worlds.length} world(s): ${payload.worlds.map((world) => `${world.title} [${world.id}]`).join(", ")}.${active ? ` Active session: ${active.sessionId} in ${active.worldId}.` : ""}`
         : "Agent World Kit is connected but has no worlds yet.";
