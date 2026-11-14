@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/chadetsell/agent-world-kit/schemas/world-project.schema.json",
+  "$id": "https://github.com/cetsell/agent-world-kit/schemas/world-project.schema.json",
   "title": "Agent World Kit project",
   "type": "object",
   "required": ["schema", "id", "title", "seedBrief", "canon", "artifacts", "assets", "sessions", "audits", "createdAt", "updatedAt"],
