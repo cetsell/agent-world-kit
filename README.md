@@ -26,7 +26,7 @@ layers, and an elizaOS plugin.
 Requires Node.js 20 or newer.
 
 ```bash
-git clone https://github.com/chadetsell/agent-world-kit.git
+git clone https://github.com/cetsell/agent-world-kit.git
 cd agent-world-kit
 npm install
 npm run demo

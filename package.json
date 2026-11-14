@@ -7,11 +7,11 @@
   "author": "Chad Etsell and contributors",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chadetsell/agent-world-kit.git"
+    "url": "git+https://github.com/cetsell/agent-world-kit.git"
   },
-  "homepage": "https://github.com/chadetsell/agent-world-kit#readme",
+  "homepage": "https://github.com/cetsell/agent-world-kit#readme",
   "bugs": {
-    "url": "https://github.com/chadetsell/agent-world-kit/issues"
+    "url": "https://github.com/cetsell/agent-world-kit/issues"
   },
   "keywords": [
     "agents",
